@@ -7,16 +7,16 @@ namespace EntelectChallenge.Common.Helpers
     {
         public static T LoadOrCreateFile<T>(string fullFilePath) where T : new()
         {
-            T botState;
+            T obj;
 
             if (!File.Exists(fullFilePath))
             {
-                botState = new T();
-                var json = JsonConvert.SerializeObject(botState);
+                obj = new T();
+                var json = JsonConvert.SerializeObject(obj);
 
                 File.WriteAllText(fullFilePath, json);
 
-                return botState;
+                return obj;
             }
 
             return LoadFile<T>(fullFilePath);
