@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace StarterBot.Enums
+namespace EntelectChallenge.Domain.Entities.Enums
 {
     public enum BuildingType
     {

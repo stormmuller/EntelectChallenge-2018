@@ -1,7 +1,9 @@
-﻿namespace EntelectChallenge.Domain.Core.Pools
+﻿using EntelectChallenge.Domain.Core;
+
+namespace EntelectChallenge.Domain.Pools
 {
     public interface IStratergyPool : IPool
     {
-        IWeightingStratergy GetStartergy<TStratergy>() where TStratergy : IWeightingStratergy;
+        IStratergy GetStartergy<TStratergy>() where TStratergy : IStratergy;
     }
 }

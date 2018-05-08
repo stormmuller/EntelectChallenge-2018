@@ -1,4 +1,4 @@
-﻿namespace StarterBot.Entities
+﻿namespace EntelectChallenge.Domain.Entities
 {
     public class Missile
     {

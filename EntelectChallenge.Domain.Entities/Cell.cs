@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using StarterBot.Enums;
+﻿using EntelectChallenge.Domain.Entities.Enums;
 
-namespace StarterBot.Entities
+namespace EntelectChallenge.Domain.Entities
 {
     public class Cell
     {

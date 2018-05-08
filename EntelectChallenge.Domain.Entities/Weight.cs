@@ -1,6 +1,6 @@
-﻿using StarterBot.Enums;
+﻿using EntelectChallenge.Domain.Entities.Enums;
 
-namespace StarterBot.Entities.Bot
+namespace EntelectChallenge.Domain.Entities
 {
     public class Weight
     {

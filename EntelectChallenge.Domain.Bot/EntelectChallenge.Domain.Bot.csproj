@@ -6,10 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntelectChallenge.Domain.Entities\EntelectChallenge.Domain.Entities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Adaptors\" />
+    <ProjectReference Include="..\EntelectChallenge.Domain.Stratergies\EntelectChallenge.Domain.Stratergies.csproj" />
   </ItemGroup>
 
 </Project>

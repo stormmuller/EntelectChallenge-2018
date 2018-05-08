@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using StarterBot.Entities;
-using StarterBot.Entities.Bot;
-using StarterBot.Enums;
-using StarterBot.Weighting;
-using StarterBot.Weighting.Startergies;
+using EntelectChallenge.Domain.Core;
+using EntelectChallenge.Domain.Entities;
+using EntelectChallenge.Domain.Stratergies;
 
-namespace StarterBot
+namespace EntelectChallenge.Domain.Bot
 {
-    public class Bot
+    public class Bot : IBot
     {
         const int startingWeightAmount = 50;
         
-        private readonly GameStateAdaptor gameState;
-        
-        public Bot(GameState gameState)
+        private readonly GameState gameState;
+        private readonly StratergyPool stratergyPool;
+
+        public Bot(GameState gameState, StratergyPool stratergyPool)
         {
-            this.gameState = new GameStateAdaptor(gameState);
+            this.gameState = gameState;
+            this.stratergyPool = stratergyPool;
         }
 
         public string Run()
@@ -43,10 +42,9 @@ namespace StarterBot
                                 Y = rowIndex
                             };
 
-                            var stratergy =
-                               StratergyPool.Instance.GetStartergy<RootStratergy>();
+                            var stratergy = stratergyPool.GetStartergy<RootStratergy>();
 
-                            var weight = stratergy.CalculateWeight(gameState, startingWeight);
+                            var weight = stratergy.CalculateWeight(startingWeight);
 
                             weights.Add(weight);
                         }

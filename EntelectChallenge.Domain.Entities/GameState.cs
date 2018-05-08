@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using StarterBot.Entities;
-using StarterBot.Enums;
-using StarterBot.Helpers;
+using EntelectChallenge.Common;
+using EntelectChallenge.Common.Helpers;
+using EntelectChallenge.Domain.Entities.Enums;
 
-namespace StarterBot
+namespace EntelectChallenge.Domain.Entities
 {
-    public class GameStateAdaptor
+    public class GameState
     {
-        private readonly GameState gameState;
-
         #region backing fields
         private Player self;
         private Tuple<BuildingType, int> cheapestBuilding;
-        private Tuple<BuildingType, int> mostExpensiveBuilding;
         private List<CellStateContainer> selfBuildings;
         private BuildingType[] allBuildingTypes;
         #endregion
 
-        public GameStateAdaptor(GameState gameState)
-        {
-            this.gameState = gameState;
-        }
+        public List<Player> Players { get; set; }
+        public CellStateContainer[][] GameMap { get; set; }
+        public GameDetails GameDetails { get; set; }
 
         public Player Self
         {
@@ -30,7 +26,7 @@ namespace StarterBot
             {
                 if (self == null)
                 {
-                    self = gameState.Players.Single(x => x.PlayerType == PlayerType.A);
+                    self = this.Players.Single(x => x.PlayerType == PlayerType.A);
                 }
 
                 return self;
@@ -43,7 +39,7 @@ namespace StarterBot
             {
                 if (cheapestBuilding == null)
                 {
-                    cheapestBuilding = gameState.GameDetails.BuildingPrices.OrderBy(pair => pair.Value).FirstOrDefault().ToTuple();
+                    cheapestBuilding = this.GameDetails.BuildingPrices.OrderBy(pair => pair.Value).FirstOrDefault().ToTuple();
                 }
 
                 return cheapestBuilding;
@@ -56,27 +52,27 @@ namespace StarterBot
             {
                 if (cheapestBuilding == null)
                 {
-                    cheapestBuilding = gameState.GameDetails.BuildingPrices.OrderByDescending(pair => pair.Value).FirstOrDefault().ToTuple();
+                    cheapestBuilding = this.GameDetails.BuildingPrices.OrderByDescending(pair => pair.Value).FirstOrDefault().ToTuple();
                 }
 
                 return cheapestBuilding;
             }
         }
-        
+
         public List<CellStateContainer> FilterRowByCell(Predicate<CellStateContainer> filter, PlayerType playerType, int row)
         {
             var cellsMeetingFilter = new List<CellStateContainer>();
 
-            for (int rowIndex = 0; rowIndex < gameState.GameMap.Length; rowIndex++)
+            for (int rowIndex = 0; rowIndex < this.GameMap.GetLength(0); rowIndex++)
             {
                 if (rowIndex != row)
                 {
                     continue;
                 }
 
-                for (int columnIndex = 0; columnIndex < gameState.GameMap[rowIndex].Length; columnIndex++)
+                for (int columnIndex = 0; columnIndex < this.GameMap[rowIndex].Length; columnIndex++)
                 {
-                    var cell = gameState.GameMap.Find(columnIndex, rowIndex);
+                    var cell = this.GameMap.Find(rowIndex, columnIndex);
 
                     if (cell.CellOwner == playerType && filter(cell))
                     {
@@ -87,14 +83,16 @@ namespace StarterBot
 
             return cellsMeetingFilter;
         }
-        
+
         public List<CellStateContainer> SelfBuildings
         {
             get
             {
                 if (selfBuildings == null)
                 {
-                    for (int rowIndex = 0; rowIndex < gameState.GameDetails.MapHeight; rowIndex++)
+                    selfBuildings = new List<CellStateContainer>();
+
+                    for (int rowIndex = 0; rowIndex < this.GameDetails.MapHeight; rowIndex++)
                     {
                         selfBuildings.AddRange(FilterRowByCell(c => c.Buildings.Count > 0, PlayerType.A, rowIndex));
                     }
@@ -104,21 +102,9 @@ namespace StarterBot
             }
         }
 
-        public int MapHeight
-        {
-            get
-            {
-                return gameState.GameDetails.MapHeight;
-            }
-        }
+        public int MapHeight => this.GameDetails.MapHeight;
 
-        public int SelfMapWidth
-        {
-            get
-            {
-                return gameState.GameDetails.MapWidth / 2;
-            }
-        }
+        public int SelfMapWidth => this.GameDetails.MapWidth / 2;
 
         public BuildingType[] AllBuildingTypes
         {
@@ -126,21 +112,24 @@ namespace StarterBot
             {
                 if (allBuildingTypes == null)
                 {
-                    allBuildingTypes = gameState.GameDetails.BuildingPrices.Keys.ToArray();
+                    allBuildingTypes = this.GameDetails.BuildingPrices.Keys.ToArray();
                 }
 
                 return allBuildingTypes;
             }
         }
 
+        public int Round => GameDetails.Round;
+        public int FrontLine => SelfMapWidth - 1;
+
         public int GetPriceForBuilding(BuildingType buildingType)
         {
-            return gameState.GameDetails.BuildingPrices[buildingType];
+            return this.GameDetails.BuildingPrices[buildingType];
         }
 
         public List<Building> GetBuildingsOnCell(int rowIndex, int columnIndex)
         {
-            return gameState.GameMap.Find(rowIndex, columnIndex).Buildings;
+            return this.GameMap.Find(columnIndex, rowIndex).Buildings;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace StarterBot.Helpers
+namespace EntelectChallenge.Common.Helpers
 {
     public static class KeyValuepairHelpers
     {
